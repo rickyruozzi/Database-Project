@@ -79,5 +79,8 @@ while True:
         print(messaggio)
         sc=input("inserire: ")
         s.send(sc.encode())
-    break
+    flag=input("inserire 0 per uscire e qualsiasi altra cosa per continuare: ")
+    s.send(flag.encode())
+    if flag=="0":
+        break
 s.close()
