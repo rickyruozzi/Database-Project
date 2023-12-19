@@ -81,7 +81,7 @@ def db_get_C():
         port=3306, 
         )
     cur = conn.cursor()
-    query = "SELECT * FROM clienti_riccardo_ruozzi"
+    query = "SELECT * FROM clienti_ruozzi_riccardo"
     cur.execute(query)
     dati = cur.fetchall()
     return dati
