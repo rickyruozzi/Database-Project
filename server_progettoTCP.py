@@ -56,7 +56,9 @@ def gestisci_comunicazione(conn):
                 db_update_C(conn)
             if scelta=="Z":
                 db_update_Z(conn)
-        break
+        chiudere=conn.recv(1024)
+        if chiudere.decode()=="0":
+            break
     return
 def db_get_zl():
     conn = mysql.connector.connect(
@@ -123,7 +125,7 @@ def db_del_z(conn):
 def db_del_c(conn):
     conn.send("selezionare id dell'elemento da eliminare (importante: verificare che l'elemento sia presente)".encode())
     scelta=conn.recv(1024).decode()
-    query = f"DELETE FROM clienti_riccardo_ruozzi WHERE id={scelta}"
+    query = f"DELETE FROM clienti_ruozzi_riccardo WHERE id={scelta}"
     connessione = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
@@ -142,7 +144,7 @@ def db_add_C(conn):
     pos_lav=conn.recv(1024).decode()
     data_ass=conn.recv(1024).decode()
     data_nas=conn.recv(1024).decode()
-    query = f"INSERT INTO clienti_riccardo_ruozzi (nome, cognome, pos_lav, data_ass, data_nas) VALUES (%s, %s, %s,%s,%s)"
+    query = f"INSERT INTO clienti_ruozzi_riccardo (nome, cognome, pos_lav, data_ass, data_nasc) VALUES (%s, %s, %s,%s,%s)"
     values=(nome,cognome,pos_lav,data_ass,data_nas)
     connessione = mysql.connector.connect(
         host="127.0.0.1",
@@ -164,7 +166,7 @@ def db_update_C(conn):
     conn.send("inserire id dell'elemento da modificare".encode())
     id=conn.recv(1024).decode()
     id=int(id)
-    query = f"UPDATE clienti_riccardo_ruozzi SET {scelta}= %s WHERE id= %s"
+    query = f"UPDATE clienti_ruozzi_riccardo SET {scelta}= %s WHERE id= %s"
     connessione = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
@@ -177,7 +179,7 @@ def db_update_C(conn):
     connessione.commit()
     connessione.close()
 def db_update_Z(conn):
-    conn.send("inserire campo da modificare (il campo deve esistere)".encode())
+    conn.send("inserire campo da modificare (il campo deve esistere): ".encode())
     scelta=conn.recv(1024).decode()
     conn.send("inserire il nuovo valore del campo: ".encode())
     val=conn.recv(1024)
